@@ -1,6 +1,4 @@
 ---
-
-
 title: 'Capering about the Cotswolds'
 link: 'https://www.educationworldtravel.com/post/capering-about-the-cotswolds'
 date: 'Wed, 09 Aug 2023 06:20:12 GMT'

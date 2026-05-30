@@ -4,23 +4,25 @@ function getQueryParam(name) {
 }
 
 function parseFrontMatter(mdText) {
-  if (!mdText.startsWith('---')) {
+  const frontMatterMatch = mdText.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!frontMatterMatch) {
     return { attrs: {}, body: mdText };
   }
-  const parts = mdText.split(/---\r?\n/);
-  if (parts.length < 3) {
-    return { attrs: {}, body: mdText };
-  }
-  const rawFront = parts[1];
-  const body = parts.slice(2).join('---\n').trim();
+  const rawFront = frontMatterMatch[1];
+  const body = mdText.slice(frontMatterMatch[0].length).trim();
   const attrs = {};
   rawFront.split(/\r?\n/).forEach((line) => {
     const [key, ...rest] = line.split(':');
-    if (!key) return;
-    const value = rest.join(':').trim().replace(/^'/, '').replace(/'$/, '');
+    if (!key || !rest.length) return;
+    const value = rest.join(':').trim().replace(/^'/, '').replace(/'$/, '').replace(/^"/, '').replace(/"$/, '');
     if (key.trim() === 'categories') {
       const categories = Array.from(value.matchAll(/'([^']+)'/g)).map((m) => m[1]);
-      attrs.categories = categories;
+      if (categories.length === 0) {
+        // Fallback for non-quoted categories
+        attrs.categories = value.split(',').map(c => c.trim().replace(/^'/, '').replace(/'$/, ''));
+      } else {
+        attrs.categories = categories;
+      }
     } else {
       attrs[key.trim()] = value;
     }
@@ -107,6 +109,8 @@ async function loadPost() {
 
   try {
     const listResponse = await fetch('../data/blog-list.json');
+    if (!listResponse.ok) throw new Error('Failed to load blog list');
+    
     const posts = await listResponse.json();
     const postMeta = posts.find((post) => post.slug === slug);
     if (!postMeta) {
@@ -119,7 +123,13 @@ async function loadPost() {
     const categories = postMeta.categories.map((category) => `<span>${category}</span>`).join(' · ');
     metaEl.innerHTML = `${postMeta.author} · ${new Date(postMeta.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}${categories ? ` · ${categories}` : ''}`;
 
-    const mdResponse = await fetch(`../${postMeta.filename}`);
+    const postPath = `../${postMeta.filename}`;
+    const mdResponse = await fetch(postPath);
+    
+    if (!mdResponse.ok) {
+      throw new Error(`Failed to load post content: ${mdResponse.status} ${mdResponse.statusText}`);
+    }
+
     const mdText = await mdResponse.text();
     const { attrs, body } = parseFrontMatter(mdText);
 
@@ -136,8 +146,13 @@ async function loadPost() {
     const html = renderMarkdown(body);
     contentEl.innerHTML = html;
   } catch (error) {
+    console.error('Error loading blog post:', error);
     titleEl.textContent = 'Unable to load post';
-    contentEl.innerHTML = `<p>${error.message}</p>`;
+    contentEl.innerHTML = `<div class="error-message">
+      <p><strong>Error:</strong> ${error.message}</p>
+      <p>We are sorry for the inconvenience. The file path might have changed during recent site updates.</p>
+      <a href="blog.html" class="button">Return to Blog</a>
+    </div>`;
   }
 }
 

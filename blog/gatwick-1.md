@@ -1,6 +1,4 @@
 ---
-
-
 title: 'Gatwick'
 link: 'https://www.educationworldtravel.com/post/gatwick-1'
 date: 'Thu, 29 Jun 2023 15:11:04 GMT'

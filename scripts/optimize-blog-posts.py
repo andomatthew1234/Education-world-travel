@@ -182,7 +182,7 @@ for path in sorted(blog_dir.glob('*.md')):
     parts = text.split('---', 2)
     if len(parts) < 3:
         continue
-    front_raw = parts[1]
+    front_raw = parts[1].strip()
     meta = parse_frontmatter(front_raw)
     body_md = ''
     live_meta = {}
@@ -193,7 +193,7 @@ for path in sorted(blog_dir.glob('*.md')):
             print(f'Failed to extract {path.name} from URL: {e}')
     if body_md and not body_md.startswith('# '):
         body_md = f'# {meta.get("title", "")}\n\n' + body_md
-    output_text = f'---\n{front_raw}---\n\n{body_md.strip()}\n'
+    output_text = f'---\n{front_raw}\n---\n\n{body_md.strip()}\n'
     path.write_text(output_text, encoding='utf-8')
     slug = path.stem
     post_categories = meta.get('categories', [])

@@ -1,6 +1,4 @@
 ---
-
-
 title: 'Three Weeks to Go!'
 link: 'https://www.educationworldtravel.com/post/three-weeks-to-go'
 date: 'Tue, 27 Jun 2023 05:32:56 GMT'

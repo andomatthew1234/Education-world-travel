@@ -1,6 +1,4 @@
 ---
-
-
 title: 'Legendary London'
 link: 'https://www.educationworldtravel.com/post/legendary-london'
 date: 'Tue, 25 Jun 2024 05:22:20 GMT'

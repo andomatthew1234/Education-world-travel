@@ -1,4 +1,5 @@
 ---
+
 title: Blog
 description: Archived blog posts from Education World Travel
 ---
