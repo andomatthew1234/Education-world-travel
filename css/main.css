@@ -131,7 +131,7 @@ body > * {
   text-align: right;
   color: #ffffff;
   font-family: 'Open Sans', sans-serif;
-  font-size: clamp(0.96rem, 1.2vw, 1.45rem);
+  font-size: clamp(0.9rem, 1.1vw, 1.3rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -139,10 +139,7 @@ body > * {
 }
 
 .hero-copy {
-  position: absolute;
-  top: 24%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 2;
   width: min(100%, 1100px);
   padding: 0 24px;
@@ -151,32 +148,48 @@ body > * {
 
 .hero-copy h1 {
   font-family: "Times New Roman", Times, serif;
-  font-size: clamp(4.2rem, 7vw, 7rem);
-  line-height: 0.92;
+  font-size: clamp(3.2rem, 8vw, 7.5rem);
+  line-height: 0.95;
   color: #ffffff;
-  text-shadow: 0 22px 54px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   margin: 0;
 }
 
 @media (max-width: 920px) {
   .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
+    padding: 20px 24px;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .site-nav {
-    width: 100%;
-    justify-content: flex-start;
-    gap: 24px;
+    gap: 20px;
   }
 
   .hero-tagline {
-    position: static;
-    width: 100%;
-    text-align: left;
-    padding: 0 24px;
-    font-size: 1.05rem;
+    top: 60px;
+    right: 24px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-nav {
+    display: none; /* Simple mobile menu: hide for now, or could stack */
+  }
+
+  .hero-tagline {
+    position: relative;
+    right: auto;
+    top: auto;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .hero {
+    flex-direction: column;
+    padding: 80px 24px;
   }
 }
 
