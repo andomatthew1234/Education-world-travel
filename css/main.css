@@ -76,6 +76,57 @@ body > * {
   gap: 40px;
 }
 
+.nav-toggle {
+  display: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-toggle span,
+.nav-toggle span::before,
+.nav-toggle span::after {
+  display: block;
+  content: '';
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+.nav-toggle span {
+  position: relative;
+}
+
+.nav-toggle span::before {
+  position: absolute;
+  top: -7px;
+}
+
+.nav-toggle span::after {
+  position: absolute;
+  top: 7px;
+}
+
+.nav-toggle[aria-expanded="true"] span {
+  background: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] span::before {
+  transform: rotate(45deg) translate(2px, 2px);
+}
+
+.nav-toggle[aria-expanded="true"] span::after {
+  transform: rotate(-45deg) translate(2px, -2px);
+}
+
 .nav-link {
   color: var(--text);
   text-decoration: none;
@@ -175,7 +226,31 @@ body > * {
 
 @media (max-width: 768px) {
   .site-nav {
-    display: none; /* Simple mobile menu: hide for now, or could stack */
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 24px;
+    width: min(320px, calc(100% - 48px));
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 24px;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.12);
+    z-index: 30;
+  }
+
+  .site-nav.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-link {
+    display: block;
+    width: 100%;
   }
 
   .hero-tagline {
@@ -208,5 +283,167 @@ body > * {
 
   .hero-copy h1 {
     font-size: clamp(3rem, 12vw, 4.8rem);
+  }
+}
+
+.page-about {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: grid;
+  gap: 40px;
+}
+
+.page-intro,
+.page-grid {
+  display: grid;
+  gap: 32px;
+}
+
+.page-intro {
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr);
+  align-items: center;
+}
+
+.page-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-copy .eyebrow {
+  color: #194d91;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.page-intro-title,
+.page-about-copy h2 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  margin: 0;
+}
+
+.page-about-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.page-image,
+.page-media {
+  border-radius: 0;
+  overflow: hidden;
+  background: #f8f8f8;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+}
+
+.page-copy-text p {
+  color: #262626;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.page-image,
+.page-media {
+  border-radius: 24px;
+  overflow: hidden;
+  background: #f8f8f8;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+}
+
+.page-image img,
+.page-media img,
+.page-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-image {
+  min-height: 400px;
+}
+
+.page-image--hero {
+  min-height: 520px;
+}
+
+.page-grid {
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.page-stack {
+  display: grid;
+  gap: 24px;
+}
+
+.page-media--video {
+  min-height: 420px;
+}
+
+.page-media--image {
+  min-height: 220px;
+}
+
+.page-about-me {
+  padding: 40px;
+  background: #fbfbfb;
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.06);
+}
+
+.page-about-me h2 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  margin-bottom: 18px;
+}
+
+.page-about-me p {
+  color: #2d2d2d;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+@media (max-width: 920px) {
+  .page-about {
+    padding: 36px 24px 64px;
+  }
+
+  .page-intro,
+  .page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-image--hero,
+  .page-media--video {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    padding: 18px 18px;
+  }
+
+  .page-about {
+    padding: 28px 18px 48px;
+  }
+
+  .page-copy .eyebrow {
+    font-size: 0.88rem;
+  }
+
+  .page-copy-text p,
+  .page-about-me p {
+    font-size: 0.98rem;
+  }
+
+  .page-about-me {
+    padding: 28px 20px;
   }
 }
