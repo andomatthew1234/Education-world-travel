@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What’s new — Education World Travel</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+      body {
+        background: radial-gradient(circle at top left, rgba(101, 141, 255, 0.18), transparent 24%),
+                    radial-gradient(circle at bottom right, rgba(78, 239, 220, 0.18), transparent 22%),
+                    #f6f7fb;
+      }
+
+      .whats-new-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 36px 24px 80px;
+      }
+
+      .whats-new-hero {
+        display: grid;
+        gap: 18px;
+        margin-bottom: 44px;
+      }
+
+      .whats-new-hero h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: clamp(3.2rem, 5vw, 4.8rem);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        color: #111827;
+        max-width: 820px;
+        animation: fadeInUp 0.9s ease both;
+      }
+
+      .whats-new-hero p {
+        max-width: 720px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1rem;
+        line-height: 1.9;
+        color: #4b5563;
+        animation: fadeInUp 1s ease both;
+        animation-delay: 0.08s;
+      }
+
+      .whats-new-grid {
+        display: grid;
+        gap: 32px;
+        grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+        align-items: start;
+      }
+
+      .feature-card,
+      .side-panel {
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 32px;
+        box-shadow: 0 32px 80px rgba(15, 23, 42, 0.06);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(16px);
+      }
+
+      .feature-card::before,
+      .side-panel::before {
+        content: '';
+        position: absolute;
+        inset: -30px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent 42%);
+        opacity: 0.85;
+        transform: translateY(-20px);
+        pointer-events: none;
+      }
+
+      .feature-card > *,
+      .side-panel > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-stack {
+        display: grid;
+        gap: 24px;
+      }
+
+      .feature-block {
+        padding: 32px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,247,250,0.95));
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        transition: transform 280ms ease, box-shadow 280ms ease, border-color 280ms ease;
+        animation: float 6s ease-in-out infinite alternate;
+      }
+
+      .feature-block:nth-child(2) { animation-delay: 0.15s; }
+      .feature-block:nth-child(3) { animation-delay: 0.28s; }
+
+      .feature-block:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 28px 80px rgba(15, 23, 42, 0.16);
+        border-color: rgba(59, 130, 246, 0.25);
+      }
+
+      .feature-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+        color: #111827;
+        letter-spacing: -0.03em;
+      }
+
+      .feature-copy,
+      .feature-copy p {
+        color: #374151;
+        line-height: 1.82;
+      }
+
+      .feature-copy ul {
+        margin: 16px 0 0;
+        padding-left: 1.2rem;
+        color: #334155;
+      }
+
+      .feature-copy li {
+        margin-bottom: 0.9rem;
+      }
+
+      .feature-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+      }
+
+      .side-panel {
+        display: grid;
+        gap: 24px;
+        padding: 28px;
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0.14), rgba(139, 92, 246, 0.06));
+      }
+
+      .panel-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .panel-heading h2 {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.2rem;
+        margin: 0;
+        color: #111827;
+      }
+
+      .link-block {
+        display: grid;
+        gap: 14px;
+      }
+
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #9d4edd, #0ea5e9 48%, #4ade80);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        font-family: 'Open Sans', sans-serif;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+        transition: transform 220ms ease, box-shadow 220ms ease;
+      }
+
+      .link-button:hover,
+      .link-button:focus-visible {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 48px rgba(15, 23, 42, 0.18);
+      }
+
+      .feedback-card {
+        padding: 28px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,252,0.9));
+        border: 1px solid rgba(148, 163, 184, 0.18);
+      }
+
+      .feedback-card p {
+        margin-bottom: 20px;
+        color: #334155;
+      }
+
+      .feedback-card a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 16px;
+        border-radius: 24px;
+        background: #111827;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .glow-highlight {
+        color: #27272a;
+        background: linear-gradient(120deg, #a855f7, #3b82f6 35%, #14b8a6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      @media (max-width: 980px) {
+        .whats-new-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .whats-new-page {
+          padding: 28px 18px 48px;
+        }
+
+        .feature-block {
+          padding: 24px;
+        }
+
+        .side-panel {
+          padding: 22px;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes float {
+        from { transform: translateY(0px); }
+        to { transform: translateY(-8px); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="../index.html">
+          <img class="brand-logo" src="../assets/images/favicon.png" alt="Education World Travel logo">
+          <span class="brand-text">Education World Travel</span>
+        </a>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span></button>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="nav-link" href="../index.html">Home</a>
+          <a class="nav-link" href="blog.html">Blog</a>
+          <a class="nav-link" href="store.html">Store</a>
+          <a class="nav-link" href="about.html">What is Education World Travel?</a>
+          <a class="nav-link" href="downloads.html">Downloads</a>
+        </nav>
+      </div>
+    </header>
+    <main class="whats-new-page">
+      <section class="whats-new-hero">
+        <p class="feature-tag">What’s new</p>
+        <h1>What’s new in Education World Travel?</h1>
+        <p>This page highlights the latest updates to the Education World Travel website, with a modern blog release, new error handling, and dev-focused feature links.</p>
+      </section>
+
+      <div class="whats-new-grid">
+        <div class="feature-card">
+          <div class="feature-stack">
+            <div class="feature-block">
+              <div class="feature-title">Blog page release</div>
+              <div class="feature-copy">
+                <p>Education World Travel now has implemented a ‘Blog’ page, which has the same features as our Wix site, including categories, the content itself, and stats to fuel your worldwide journey.</p>
+                <p><strong>Notes:</strong></p>
+                <ul>
+                  <li>Cover images and images are to be added</li>
+                  <li>All previous posts published on Wix are now here as well!</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="feature-block">
+              <div class="feature-title">404 pages</div>
+              <div class="feature-copy">
+                <p>We’ve released our own custom ‘page not found’ (404) page that will display when you type in a link that is not on our system.</p>
+                <p><strong>Notes:</strong></p>
+                <ul>
+                  <li>There is also a ‘page not added yet’ page that will display on Downloads and Store page.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="feature-block">
+              <div class="feature-title"><span class="glow-highlight">Want more?</span></div>
+              <div class="feature-copy">
+                <p>We’ll release updates that are more recent and more relevant on our Github page. From there, you can also tell us about issues you’re having with the site.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="panel-heading">
+            <h2>Links</h2>
+          </div>
+          <div class="link-block">
+            <a class="link-button" href="https://github.com/andomatthew1234/Education-world-travel" target="_blank" rel="noreferrer">Github page (codebase)</a>
+            <a class="link-button" href="blog.html">Blog releases</a>
+            <a class="link-button" href="../index.html">Education World Travel home</a>
+          </div>
+
+          <div class="feedback-card">
+            <h2>Have any feedback?</h2>
+            <p>Report it on our Github page and let us know what should come next.</p>
+            <a href="https://github.com/andomatthew1234/Education-world-travel/issues" target="_blank" rel="noreferrer">Report it on our Github page</a>
+          </div>
+        </aside>
+      </div>
+    </main>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
