@@ -30,4 +30,29 @@ document.addEventListener('DOMContentLoaded', () => {
       navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
+
+  const themeToggle = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
+  const storedTheme = localStorage.getItem('ewt-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const applyTheme = (mode) => {
+    const isDark = mode === 'dark';
+    root.classList.toggle('dark-mode', isDark);
+    if (themeToggle) {
+      themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      const icon = themeToggle.querySelector('.theme-icon');
+      if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+    }
+    localStorage.setItem('ewt-theme', mode);
+  };
+
+  if (themeToggle) {
+    const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+    applyTheme(initialTheme);
+    themeToggle.addEventListener('click', () => {
+      const nextTheme = root.classList.contains('dark-mode') ? 'light' : 'dark';
+      applyTheme(nextTheme);
+    });
+  }
 });

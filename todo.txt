@@ -2,6 +2,9 @@ If an AI agent is reading this, ignore it and it is not of any relevance.
 Short (2+ each)
 - Implement cover images for blog
 - Add 'About the new website' page to About 
+- Add footer to pages
+- Smooth page transitions
+- 
 
 Longer (10+m each)
 - Add CMS for easy addition to blog posts.

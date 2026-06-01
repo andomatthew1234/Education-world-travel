@@ -2,9 +2,25 @@
   --bg: #ffffff;
   --text: #000000;
   --accent: #2573DA;
+  --header-bg: rgba(255, 255, 255, 0.96);
+  --surface: #ffffff;
+  --surface-soft: #fbfbfb;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --shadow: rgba(0, 0, 0, 0.08);
   --header-padding-vertical: 28px;
   --header-padding-horizontal: 48px;
   --max-width: 1280px;
+}
+
+html.dark-mode {
+  --bg: #070b16;
+  --text: #f8fafc;
+  --accent: #60a5fa;
+  --header-bg: rgba(15, 23, 42, 0.96);
+  --surface: #0f172a;
+  --surface-soft: #111827;
+  --card-border: rgba(148, 163, 184, 0.24);
+  --shadow: rgba(15, 23, 42, 0.28);
 }
 
 * {
@@ -29,8 +45,8 @@ body > * {
 }
 
 .site-header {
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--card-border);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -76,11 +92,12 @@ body > * {
   gap: 40px;
 }
 
-.nav-toggle {
+.nav-toggle,
+.theme-toggle {
   display: none;
   appearance: none;
   border: none;
-  background: transparent;
+  background: rgba(255,255,255,0.14);
   color: inherit;
   width: 48px;
   height: 48px;
@@ -88,6 +105,23 @@ body > * {
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  border-radius: 14px;
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.theme-toggle {
+  display: inline-flex;
+}
+
+.theme-toggle:hover,
+.nav-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.26);
+}
+
+.theme-toggle .theme-icon {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .nav-toggle span,
@@ -374,8 +408,8 @@ body > * {
 .page-media {
   border-radius: 24px;
   overflow: hidden;
-  background: #f8f8f8;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+  background: var(--surface-soft);
+  box-shadow: 0 24px 70px var(--shadow);
 }
 
 .page-image img,
@@ -415,9 +449,9 @@ body > * {
 
 .page-about-me {
   padding: 40px;
-  background: #fbfbfb;
+  background: var(--surface-soft);
   border-radius: 24px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 24px 70px var(--shadow);
 }
 
 .page-about-me h2 {

@@ -34,10 +34,11 @@ Education World Travel is built around the idea of using travel to educate child
 ## What the GitHub Page is for
 This GitHub Pages site is the public home for the Education World Travel rebuild. It is used to:
 
-- host the static website for visitors
+- host the website online with Github Pages
 - share the current site progress and feature updates
-- display the custom 404 page and placeholder pages while the site is under development
-- make it easy to review and update the project from GitHub
+- hosts all of the pages and static images on the website
+- make it easy for us to publish the latest updates in a few clicks
+- allow users to contribute to the project, or report bugs
 
 ## Visual features
 The site now includes:
@@ -56,12 +57,21 @@ The rebuild is actively being built. Current progress includes:
 - New website feature page created
 - Store/Downloads placeholders in place
 
-## How to preview locally
-Open `index.html` in your browser, or host the folder with a simple HTTP server if needed.
+What we're planning to add soon:
+- Better blog posts with images
+- Improvements on CMS (blog post management), SEO (Google/Bing search result engines), and Responsive Design (making the website look and scale great on smaller devices)
+- Easy bug-reporting page 
+- improved images
+- dark theme option
+
+## How to view the site
+Standard use-case:
+Head to our site at https://andomatthew1234.github.io/Education-world-travel/
+For developers: Run the index.html file in your browser.
 
 ---
 
-### Team
-This site is built for Education World Travel with a focus on family learning, travel stories, and educational adventures.
 
 ![About Image](assets/about/1.png)
+
+*Site created by Matthew Anderson*
