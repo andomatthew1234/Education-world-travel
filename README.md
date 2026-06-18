@@ -48,6 +48,31 @@ The site now includes:
 - a custom GitHub Pages-friendly 404 page
 - placeholder pages for Store and Downloads to avoid broken links
 
+## Blog post structure
+Each blog post lives in its own folder under `blog/`. Keep the Markdown file and any images for that post together:
+
+```text
+blog/
+  capering-about-the-cotswolds/
+    capering-about-the-cotswolds.md
+    cover.jpg
+    village-street.jpg
+```
+
+Use post-folder-relative image paths in the Markdown:
+
+```md
+---
+title: 'Capering about the Cotswolds'
+cover: 'cover.jpg'
+coverAlt: 'Cotswolds village street'
+---
+
+![Arlington Row cottages](village-street.jpg)
+```
+
+Run `python scripts/optimize-blog-posts.py` after adding or changing post metadata so `data/blog-list.json` is refreshed for the blog listing page.
+
 ## Project status
 The rebuild is actively being built. Current progress includes:
 

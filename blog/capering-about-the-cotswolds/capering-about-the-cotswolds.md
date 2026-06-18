@@ -4,6 +4,8 @@ link: 'https://www.educationworldtravel.com/post/capering-about-the-cotswolds'
 date: 'Wed, 09 Aug 2023 06:20:12 GMT'
 author: 'Karen Anderson'
 categories: ['Trips', 'England']
+cover: '1.png'
+coverAlt: 'Cotswolds village photo'
 excerpt: 'If you want to stay in one of the prettiest villages in England, stay at Bibury in the Cotswolds. It’s not a place to go if you’re looking for lots of things to do, but it has a quiet village atmosphere with beautiful old cottages everywhere you look.  Hanging out with the locals  Stroll around the quaint village and walk along the most famous street: Arlington Row. This street is said to be one of the most photographed in the whole of England, and has been in a number of films. The spot gets...'
 ---
 
@@ -11,9 +13,13 @@ excerpt: 'If you want to stay in one of the prettiest villages in England, stay 
 
 If you want to stay in one of the prettiest villages in England, stay at Bibury in the Cotswolds. It’s not a place to go if you’re looking for lots of things to do, but it has a quiet village atmosphere with beautiful old cottages everywhere you look.
 
+![Bibury village cottages](1.png)
+
 Hanging out with the locals
 
 Stroll around the quaint village and walk along the most famous street: Arlington Row. This street is said to be one of the most photographed in the whole of England, and has been in a number of films. The spot gets very busy with tourists, so it’s best to pick the early morning or late afternoon if you want to go without the hordes. Most of them just roll in on the buses, get out for a few minutes to walk along the row and take a photo, and then roll out again, which certainly misses the quiet beauty of the place. Arlington Row dates back to the 1380s.
+
+![Arlington Row cottages](2.png)
 
 Strolling along Arlington Row
 

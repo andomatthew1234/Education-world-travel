@@ -5,6 +5,8 @@ date: 'Tue, 25 Jun 2024 05:22:20 GMT'
 author: 'Karen Anderson'
 categories: ['England']
 excerpt: 'If you want to educate your children, London has it all! Great history, great art, great transport and great fun! The hardest thing when planning is to work out what to cut off the list of must-dos. What you choose, of course, will depend on the ages of your children and their interests. Tips for London Transport is easy (although expensive). Use the Tube  (underground railway system) and double decker buses  to get around. We found the Tube was an attraction in its own right for our little...'
+cover: '1.jpeg'
+coverAlt: 'London travel photo'
 ---
 
 # Legendary London
@@ -112,7 +114,11 @@ Highlights to see are paintings by: Rembrandt, Monet, Picasso, Da Vinci, Titian,
 - '[Dead Famous: Horatio Nelson and his Victory' by Phillip Reeve](https://amzn.to/3KnqcBe)
 - 'The Impressionist Art Game' by Wenda Brewster O'Reilly This excellent game is now very expensive, but you might be able to pick up one secondhand!
 - Do a jigsaw puzzle of a famous painting such as this one by Rousseau that one of my children loved: [https://shop.nationalgallery.org.uk/jigsaw-1000-piece-surprised-1052069.html](https://shop.nationalgallery.org.uk/jigsaw-1000-piece-surprised-1052069.html)
-- Try an art project such as this scratch art one: "[https://shop.nationalgallery.org.uk/scratch-art-craft-kit-inspired-by-van-gogh-1054159.html](https://shop.nationalgallery.org.uk/scratch-art-craft-kit-inspired-by-van-gogh-1054159.html)
+- Try an art project such as this scratch art one: [https://shop.nationalgallery.org.uk/scratch-art-craft-kit-inspired-by-van-gogh-1054159.html](https://shop.nationalgallery.org.uk/scratch-art-craft-kit-inspired-by-van-gogh-1054159.html)
+
+![National Gallery activity photo](1.jpeg)
+
+![National Gallery follow-up photo](2.png)
 
 ## Imperial War Museum
 
@@ -197,6 +203,10 @@ There is a lot to see at Greenwich, including:
 - ['Sea Clocks: The Story of Longitude' by Louise Borden](https://amzn.to/3VOL5e4)
 - 'Longitude' TV series directed by Charles Sturridge (for older viewers)
 
+![Longitude TV series resource](3.png)
+
+![Greenwich longitude activity](4.png)
+
 ## The Tower of London
 
 This history-packed castle is an incredible place to visit. It's hard to avoid the crowds, but be sure to go anyway!
@@ -217,6 +227,8 @@ This history-packed castle is an incredible place to visit. It's hard to avoid t
 - ['Horrible Histories: Henry VIII's Secret Diary' by Terry Deary](https://amzn.to/4cnu5Cz)
 - ['Horrible Histories: Terrible Tudors' by Terry Deary](https://amzn.to/3VNX3Ex)
 
+![Terrible Tudors resource](5.png)
+
 ## St Paul's Cathedral
 
 St Paul’s is an incredible cathedral - well worth the expensive entry price (which apparently is for up-keeping of the building). There's quite a bit to see and talk about here: who designed this amazing Baroque building (Christopher Wren), how the other one burnt down in the Great Fire of London, who is buried in the crypt and what they are famous for, and even how pipe organs work!
@@ -234,6 +246,8 @@ St Paul’s is an incredible cathedral - well worth the expensive entry price (w
 - '[Usborne Young Reading: Nelson' by Minna Lacey](https://amzn.to/4bF9ZDv)
 - '[Dead Famous: Horatio Nelson and his Victory' by Phillip Reeve](https://amzn.to/3KnqcBe)
 - ['You Wouldn't Want to be in the Great Fire of London' by Jim Pipe](https://amzn.to/4btgMzp)
+
+![Great Fire of London resource](6.png)
 
 ## The Globe
 

@@ -175,7 +175,7 @@ def pretty_date(iso_date):
 
 
 posts = []
-for path in sorted(blog_dir.glob('*.md')):
+for path in sorted(blog_dir.glob('*/*.md')):
     if path.name == 'index.md':
         continue
     text = path.read_text(encoding='utf-8')
@@ -195,11 +195,11 @@ for path in sorted(blog_dir.glob('*.md')):
         body_md = f'# {meta.get("title", "")}\n\n' + body_md
     output_text = f'---\n{front_raw}\n---\n\n{body_md.strip()}\n'
     path.write_text(output_text, encoding='utf-8')
-    slug = path.stem
+    slug = path.parent.name
     post_categories = meta.get('categories', [])
     if live_meta.get('footer_categories'):
         post_categories = live_meta['footer_categories']
-    posts.append({
+    post = {
         'title': meta.get('title', slug.replace('-', ' ').title()),
         'link': meta.get('link', ''),
         'date': meta.get('date', ''),
@@ -207,10 +207,15 @@ for path in sorted(blog_dir.glob('*.md')):
         'categories': post_categories,
         'excerpt': meta.get('excerpt', ''),
         'slug': slug,
-        'filename': f'blog/{path.name}',
+        'filename': path.as_posix(),
         'readTime': live_meta.get('readTime', '') or '',
         'updated': live_meta.get('updated', '') or '',
-    })
+    }
+    if meta.get('cover'):
+        post['cover'] = meta['cover']
+    if meta.get('coverAlt'):
+        post['coverAlt'] = meta['coverAlt']
+    posts.append(post)
 
 with open(data_dir / 'blog-list.json', 'w', encoding='utf-8') as f:
     json.dump(posts, f, indent=2, ensure_ascii=False)

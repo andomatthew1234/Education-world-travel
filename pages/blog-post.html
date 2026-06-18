@@ -21,9 +21,6 @@
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span></span>
         </button>
-        <button class="theme-toggle" aria-label="Toggle dark mode" aria-live="polite">
-          <span class="theme-icon">🌙</span>
-        </button>
         <nav class="site-nav" aria-label="Primary navigation">
           <a class="nav-link" href="../index.html">Home</a>
           <a class="nav-link active" href="blog.html">Blog</a>
@@ -33,7 +30,7 @@
         </nav>
       </div>
     </header>
-    <main class="post-page">
+    <main class="post-page" data-blog-index-path="../data/blog-list.json" data-blog-content-root="../">
       <section class="post-hero">
         <div class="post-hero-cover"></div>
         <div class="post-hero-copy">
@@ -45,6 +42,10 @@
       <section class="post-content-wrapper">
         <div class="post-body" id="postContent"></div>
         <div class="post-sidebar">
+          <div class="post-sidebar-card" id="sidebarLinksCard" style="display: none;">
+            <p class="sidebar-label">In this post</p>
+            <ul class="sidebar-links-list" id="sidebarLinks"></ul>
+          </div>
           <div class="post-sidebar-card">
             <p class="sidebar-label">Want more travel stories?</p>
             <a class="sidebar-link" href="blog.html">Back to all posts</a>

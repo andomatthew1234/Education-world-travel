@@ -4,6 +4,8 @@ link: 'https://www.educationworldtravel.com/post/outstanding-oxford-1'
 date: 'Wed, 09 Aug 2023 19:20:10 GMT'
 author: 'Karen Anderson'
 categories: ['England']
+cover: '2.png'
+coverAlt: 'Oxford travel photo'
 excerpt: 'Oxford, the home of one of the most famous universities in England, is a really interesting place to visit. We only had one day here on our recent trip, so we were only able to scratch the surface. Here’s some tips and ideas for visiting there with your kids!  What is there to do in Oxford? The University of Oxford  is not to be missed. It is the oldest known English-speaking university in the world (dating from 1096). So many famous people have attended or have taught here. It is a little...'
 ---
 
@@ -19,19 +21,31 @@ One really great place to go to is Christ Church, founded by King Henry VIII. Th
 
 The Great Hall
 
+![Christ Church Great Hall](1.png)
+
+![Christ Church dining hall](2.png)
+
 What a place to get your meal served!
 
 Other interesting highlights of the tour included a staircase also used in the Harry Potter films, and a quad and clock tower designed by Christopher Wren (the same architect who designed St Paul’s Cathedral in London). In addition, Christ Church claims that it has the oldest form of graffiti on record, which is on a door and states ‘Peel’. Apparently it is a protest against Robert Peel, the Prime Minister in the early 19th century. Surely there’s some older graffiti somewhere in the world?! There are also drawings by da Vinci, Michelangelo and Raphael in the Christ Church Picture Gallery (although we didn’t see these as we didn’t know they were there!). The Christ Church Cathedral is stunning, and you can go inside as part of the same tour.
+
+![Christ Church Cathedral](3.png)
 
 Wren’s tower and quad
 
 You can also see the magnificent Meadow Building without having to buy a ticket.
 
+![Meadow Building](4.png)
+
 The Meadow Building
 
 Another great place to visit in Oxford was the free **Ashmolean Museum** – an unexpected delight. We wandered in to fill in a few minutes, and discovered incredible Egyptian mummies and frescos, plus figurines from around 2000BC, all with no crowds of people disrupting our view (unlike at the British Museum). This museum also houses a Stradivarius violin, a Jericho skull from 7000BC, sketches from Michelangelo and Raphael, paintings by Pissarro, samurai armour, and Guy Fawkes’ lantern among other treasures. Don’t miss these like we did!
 
+![Ashmolean Museum mummy display](5.png)
+
 A mummified cat
+
+![Ashmolean Museum mummified cat](6.png)
 
 More mummies
 

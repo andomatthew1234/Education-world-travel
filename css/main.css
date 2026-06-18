@@ -12,15 +12,17 @@
   --max-width: 1280px;
 }
 
-html.dark-mode {
-  --bg: #070b16;
-  --text: #f8fafc;
-  --accent: #60a5fa;
-  --header-bg: rgba(15, 23, 42, 0.96);
-  --surface: #0f172a;
-  --surface-soft: #111827;
-  --card-border: rgba(148, 163, 184, 0.24);
-  --shadow: rgba(15, 23, 42, 0.28);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #070b16;
+    --text: #f8fafc;
+    --accent: #60a5fa;
+    --header-bg: rgba(15, 23, 42, 0.96);
+    --surface: #0f172a;
+    --surface-soft: #111827;
+    --card-border: rgba(148, 163, 184, 0.24);
+    --shadow: rgba(15, 23, 42, 0.28);
+  }
 }
 
 * {
@@ -92,8 +94,7 @@ body > * {
   gap: 40px;
 }
 
-.nav-toggle,
-.theme-toggle {
+.nav-toggle {
   display: none;
   appearance: none;
   border: none;
@@ -109,19 +110,9 @@ body > * {
   transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
-.theme-toggle {
-  display: inline-flex;
-}
-
-.theme-toggle:hover,
 .nav-toggle:hover {
   transform: translateY(-1px);
   background: rgba(255,255,255,0.26);
-}
-
-.theme-toggle .theme-icon {
-  font-size: 1rem;
-  line-height: 1;
 }
 
 .nav-toggle span,
@@ -346,7 +337,7 @@ body > * {
 }
 
 .page-copy .eyebrow {
-  color: #194d91;
+  color: var(--accent);
   font-family: 'Open Sans', sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -399,7 +390,7 @@ body > * {
 }
 
 .page-copy-text p {
-  color: #262626;
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.85;
 }
@@ -461,7 +452,7 @@ body > * {
 }
 
 .page-about-me p {
-  color: #2d2d2d;
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.85;
 }
