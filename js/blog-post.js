@@ -3,43 +3,13 @@ function getQueryParam(name) {
   return params.get(name);
 }
 
-function parseFrontMatter(mdText) {
-  const frontMatterMatch = mdText.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!frontMatterMatch) {
-    return { attrs: {}, body: mdText };
-  }
-
-  const rawFront = frontMatterMatch[1];
-  const body = mdText.slice(frontMatterMatch[0].length).trim();
-  const attrs = {};
-
-  rawFront.split(/\r?\n/).forEach((line) => {
-    const [key, ...rest] = line.split(':');
-    if (!key || !rest.length) return;
-
-    const value = rest.join(':').trim().replace(/^'/, '').replace(/'$/, '').replace(/^"/, '').replace(/"$/, '');
-    if (key.trim() === 'categories') {
-      const categories = Array.from(value.matchAll(/'([^']+)'/g)).map((m) => m[1]);
-      if (categories.length === 0) {
-        attrs.categories = value.split(',').map((category) => category.trim().replace(/^'/, '').replace(/'$/, ''));
-      } else {
-        attrs.categories = categories;
-      }
-    } else {
-      attrs[key.trim()] = value;
-    }
-  });
-
-  return { attrs, body };
-}
-
 function resolvePostAssetPath(source, postMeta, contentRoot) {
   const value = source.trim().replace(/^['"]|['"]$/g, '');
   if (/^(https?:)?\/\//.test(value) || /^(data|mailto|tel):/.test(value) || value.startsWith('/')) {
     return value;
   }
 
-  const postDir = postMeta.filename.split('/').slice(0, -1).join('/');
+  const postDir = postMeta.assetPath;
   return `${contentRoot}${postDir}/${value.replace(/^\.\//, '')}`;
 }
 
@@ -146,7 +116,6 @@ function renderMarkdown(mdText, postMeta, contentRoot) {
 async function loadPost() {
   const slug = getQueryParam('slug');
   const page = document.querySelector('.post-page');
-  const blogIndexPath = page?.dataset.blogIndexPath || '../data/blog-list.json';
   const blogContentRoot = page?.dataset.blogContentRoot || '../';
   const titleEl = document.getElementById('postTitle');
   const metaEl = document.getElementById('postMeta');
@@ -159,40 +128,29 @@ async function loadPost() {
   }
 
   try {
-    const listResponse = await fetch(blogIndexPath);
-    if (!listResponse.ok) throw new Error('Failed to load blog list');
-
-    const posts = await listResponse.json();
-    const postMeta = posts.find((post) => post.slug === slug);
-    if (!postMeta) {
+    const postDocument = await firestore.collection('blogPosts').doc(slug).get();
+    if (!postDocument.exists || !postDocument.data().published) {
       titleEl.textContent = 'Post not found';
       contentEl.innerHTML = '<p>The requested post does not exist.</p>';
       return;
     }
+    const postMeta = postDocument.data();
 
     titleEl.textContent = postMeta.title;
     const categories = postMeta.categories.map((category) => `<span>${category}</span>`).join(' &middot; ');
     metaEl.innerHTML = `${postMeta.author} &middot; ${new Date(postMeta.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}${categories ? ` &middot; ${categories}` : ''}`;
 
-    const mdResponse = await fetch(`${blogContentRoot}${postMeta.filename}`);
-    if (!mdResponse.ok) {
-      throw new Error(`Failed to load post content: ${mdResponse.status} ${mdResponse.statusText}`);
-    }
-
-    const mdText = await mdResponse.text();
-    const { attrs, body } = parseFrontMatter(mdText);
-
-    if (attrs.cover) {
+    if (postMeta.cover) {
       const coverEl = document.querySelector('.post-hero-cover');
       if (coverEl) {
-        const coverUrl = resolvePostAssetPath(attrs.cover, postMeta, blogContentRoot);
+        const coverUrl = resolvePostAssetPath(postMeta.cover, postMeta, blogContentRoot);
         coverEl.style.backgroundImage = `linear-gradient(180deg, rgba(17, 24, 39, 0.16), rgba(17, 24, 39, 0.6)), url("${coverUrl}")`;
         coverEl.style.backgroundSize = 'cover';
         coverEl.style.backgroundPosition = 'center';
       }
     }
 
-    contentEl.innerHTML = renderMarkdown(body, postMeta, blogContentRoot);
+    contentEl.innerHTML = renderMarkdown(postMeta.body, postMeta, blogContentRoot);
 
     // Sidebar Links Extraction
     const links = contentEl.querySelectorAll('a');

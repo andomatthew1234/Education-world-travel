@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const page = document.querySelector('.blog-page');
   const grid = document.getElementById('blogGrid');
   const filterButtons = Array.from(document.querySelectorAll('.filter-button'));
-  const blogIndexPath = page?.dataset.blogIndexPath || '../data/blog-list.json';
   const blogContentRoot = page?.dataset.blogContentRoot || '../';
   const blogPostPage = page?.dataset.blogPostPage || 'blog-post.html';
 
@@ -16,8 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     return `${blogContentRoot}${postDir}/${value.replace(/^\.\//, '')}`;
   };
 
-  const response = await fetch(blogIndexPath);
-  const posts = await response.json();
+  const snapshot = await firestore.collection('blogPosts').where('published', '==', true).get();
+  const posts = snapshot.docs.map((doc) => doc.data());
   const sortedPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const categoryMap = new Map();

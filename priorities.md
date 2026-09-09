@@ -1,0 +1,14 @@
+Requirements for site:
+- Needs to be easy to access and add/manage posts using a CMS tool similar to Wix blog. You should **not** need to manually edit the code files and re-publish to add a post.
+- Needs to be secure
+- Cheap montjly subscription (max. $40/year AUD)
+- Fast and responsive site with minimal load times
+- Keeping the structure of the existing site that we have now
+- Mobile-first reading experience: posts, navigation, images, and CMS editing should work smoothly on phones and tablets
+- SEO and sharing controls: editable page titles, descriptions, URLs, Open Graph images, sitemap, and structured article metadata
+- Content organisation: categories, tags, featured posts, author details, and search so readers can easily find relevant articles
+- Backups and ownership: automatic backups plus an export option for posts and media, avoiding dependence on a single platform
+- Simple analytics: see how many people visit the website and where they came from
+- Contact and enquiry form: provide a simple, spam-protected way for readers or potential partners to get in touch
+- Image management: automatically resize and optimise uploaded post images to keep pages fast while retaining good quality
+- Editorial workflow: allow posts to be saved as drafts, previewed before publishing, scheduled for later, and edited by more than one approved person
