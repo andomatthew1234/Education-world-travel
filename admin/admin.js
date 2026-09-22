@@ -308,7 +308,16 @@
       const data = buildPostData(status, publishDate, isExistingSameDocument);
       const batch = db.batch();
       batch.set(newRef, data);
-      if (selectedId && selectedId !== slug) batch.delete(db.collection('blogPosts').doc(selectedId));
+      const newScheduleRef = db.collection('publicationSchedule').doc(slug);
+      if (status === 'scheduled') {
+        batch.set(newScheduleRef, { slug, publishAt: Timestamp.fromDate(publishDate) });
+      } else {
+        batch.delete(newScheduleRef);
+      }
+      if (selectedId && selectedId !== slug) {
+        batch.delete(db.collection('blogPosts').doc(selectedId));
+        batch.delete(db.collection('publicationSchedule').doc(selectedId));
+      }
       await batch.commit();
       selectedId = slug;
       selectedPost = { id: slug, ...data, publishAt: Timestamp.fromDate(publishDate) };
@@ -342,7 +351,7 @@
       coverAlt: elements.coverAlt.value.trim(),
       featured: elements.featured.checked,
       status,
-      published: status !== 'draft',
+      published: status === 'published',
       publishAt: Timestamp.fromDate(publishDate),
       seoTitle: elements.seoTitle.value.trim(),
       seoDescription: elements.seoDescription.value.trim(),
@@ -363,7 +372,10 @@
     if (!selectedId || !window.confirm(`Permanently delete “${elements.title.value || selectedId}”?`)) return;
     setButtonsDisabled(true);
     try {
-      await db.collection('blogPosts').doc(selectedId).delete();
+      const batch = db.batch();
+      batch.delete(db.collection('blogPosts').doc(selectedId));
+      batch.delete(db.collection('publicationSchedule').doc(selectedId));
+      await batch.commit();
       showToast('Post deleted.');
       dirty = false;
       newPost();

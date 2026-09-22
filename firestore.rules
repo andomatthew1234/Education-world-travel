@@ -3,7 +3,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Assumed model: blogPosts/{slug} contains public article content and
-    // editorial metadata. adminUsers/{uid} contains enabled, displayName,
+    // editorial metadata. publicationSchedule/{slug} contains only the slug
+    // and publishAt timestamp. adminUsers/{uid} contains enabled, displayName,
     // createdAt, and createdBy only; it intentionally contains no email/PII.
 
     function isAuthenticated() {
@@ -53,8 +54,8 @@ service cloud.firestore {
 
     function validStatus(data) {
       return data.status in ['draft', 'published', 'scheduled'] &&
-        ((data.status == 'draft' && data.published == false) ||
-          (data.status in ['published', 'scheduled'] && data.published == true));
+        (data.status in ['draft', 'scheduled'] && data.published == false ||
+          data.status == 'published' && data.published == true);
     }
 
     function hasValidPostFields(data) {
@@ -105,9 +106,31 @@ service cloud.firestore {
     }
 
     function isPublicPost(data) {
-      return data.published == true &&
-        data.status in ['published', 'scheduled'] &&
-        data.publishAt <= request.time;
+      return data.published == true;
+    }
+
+    function isValidSchedule(data, postId) {
+      return data.keys().hasAll(['slug', 'publishAt']) &&
+        data.keys().hasOnly(['slug', 'publishAt']) &&
+        validString(data.slug, 1, 120) &&
+        data.slug == postId &&
+        data.publishAt is timestamp;
+    }
+
+    function isValidDuePromotion(postId) {
+      return resource.data.status == 'scheduled' &&
+        resource.data.published == false &&
+        resource.data.publishAt <= request.time &&
+        request.resource.data.status == 'published' &&
+        request.resource.data.published == true &&
+        request.resource.data.updatedAt == request.time &&
+        request.resource.data.updatedBy == 'public-scheduler' &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'published', 'updatedAt', 'updatedBy']) &&
+        isValidPost(request.resource.data, postId) &&
+        exists(/databases/$(database)/documents/publicationSchedule/$(postId)) &&
+        get(/databases/$(database)/documents/publicationSchedule/$(postId)).data.publishAt == resource.data.publishAt &&
+        !existsAfter(/databases/$(database)/documents/publicationSchedule/$(postId));
     }
 
     function isValidAdmin(data) {
@@ -129,14 +152,27 @@ service cloud.firestore {
         request.resource.data.createdAt == request.time &&
         request.resource.data.updatedAt == request.time;
 
-      allow update: if isAdmin() &&
-        isValidPost(request.resource.data, postId) &&
-        uidNotModified() &&
-        request.resource.data.createdAt == resource.data.createdAt &&
-        request.resource.data.updatedBy == request.auth.uid &&
-        request.resource.data.updatedAt == request.time;
+      allow update: if (isAdmin() &&
+          isValidPost(request.resource.data, postId) &&
+          uidNotModified() &&
+          request.resource.data.createdAt == resource.data.createdAt &&
+          request.resource.data.updatedBy == request.auth.uid &&
+          request.resource.data.updatedAt == request.time) ||
+        isValidDuePromotion(postId);
 
       allow delete: if isAdmin();
+    }
+
+    match /publicationSchedule/{postId} {
+      // Schedule records contain no article content or editor identity. Public
+      // reads let the first visitor after publishAt trigger the atomic,
+      // rules-validated promotion of the corresponding post.
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSchedule(request.resource.data, postId);
+      allow delete: if isAdmin() ||
+        (resource.data.publishAt <= request.time &&
+          getAfter(/databases/$(database)/documents/blogPosts/$(postId)).data.status == 'published' &&
+          getAfter(/databases/$(database)/documents/blogPosts/$(postId)).data.published == true);
     }
 
     match /adminUsers/{userId} {

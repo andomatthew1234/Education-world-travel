@@ -93,7 +93,7 @@ It supports:
 
 The bootstrap administrator is the verified Firebase account configured in `firestore.rules`. Additional administrators sign in once, copy the UID shown on the access screen, and are approved from the Administrators panel in the CMS.
 
-Scheduled posts use `publishAt` plus Firestore Security Rules. They become publicly readable automatically when their scheduled time arrives, without a paid scheduler or server process.
+Scheduled posts remain private until `publishAt`. The first public blog visit after that time performs a tightly restricted, atomic promotion validated by Firestore Security Rules, so no paid scheduler or server process is required.
 
 ### Media setup
 

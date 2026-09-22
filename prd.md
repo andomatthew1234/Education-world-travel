@@ -174,7 +174,7 @@ The CMS must enable:
 - Media upload and management.
 - Content export.
 
-The CMS is custom-built on Firebase Authentication, Firestore, Hosting, and (once billing is approved) Cloud Storage. Scheduled visibility is enforced with `publishAt` in both Firestore queries and Security Rules.
+The CMS is custom-built on Firebase Authentication, Firestore, Hosting, and (once billing is approved) Cloud Storage. Scheduled posts stay private until `publishAt`; the first subsequent public blog visit performs a rules-validated atomic promotion.
 
 ### 5.7 Image Management
 
@@ -318,7 +318,7 @@ The migration is successful when:
 
 | Risk | Mitigation |
 |---|---|
-| Sanity free tier may not include every desired scheduling/preview feature | Validate current plan capability before final CMS configuration; choose the lowest-maintenance compatible alternative if required |
+| Firebase Storage requires Blaze billing for new projects | Keep URL-based media working now and activate Storage only after the project owner approves billing |
 | Free-tier pricing or limits may change | Keep source code in GitHub and content exportable; document migration paths |
 | Existing image references may not migrate cleanly | Inventory and migrate media, then validate every imported article |
 | Legacy URLs may be difficult to redirect exactly | Implement straightforward redirects first; do not block core launch |

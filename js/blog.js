@@ -106,9 +106,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   search.addEventListener('input', renderPosts);
   status.textContent = 'Loading posts…';
   try {
+    await promoteDueScheduledPosts();
     const snapshot = await firestore.collection('blogPosts')
       .where('published', '==', true)
-      .where('status', 'in', ['published', 'scheduled'])
       .where('publishAt', '<=', firebase.firestore.Timestamp.now())
       .orderBy('publishAt', 'desc')
       .get();
@@ -120,5 +120,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     status.textContent = '';
     grid.innerHTML = '';
     addTextElement(grid, 'p', 'empty-state error-message', 'The blog could not be loaded right now. Please try again shortly.');
+  }
+
+  async function promoteDueScheduledPosts() {
+    try {
+      const snapshot = await firestore.collection('publicationSchedule').get();
+      const now = Date.now();
+      const due = snapshot.docs.filter((document) => toDate(document.data().publishAt).getTime() <= now);
+      await Promise.all(due.map(async (document) => {
+        const batch = firestore.batch();
+        batch.update(firestore.collection('blogPosts').doc(document.id), {
+          status: 'published',
+          published: true,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedBy: 'public-scheduler'
+        });
+        batch.delete(document.ref);
+        try {
+          await batch.commit();
+        } catch (error) {
+          // Another visitor may have completed the same one-time promotion.
+          if (error.code !== 'permission-denied' && error.code !== 'not-found') throw error;
+        }
+      }));
+    } catch (error) {
+      console.warn('Scheduled publishing check was unavailable:', error);
+    }
   }
 });

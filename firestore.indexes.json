@@ -5,6 +5,14 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "published", "order": "ASCENDING" },
+        { "fieldPath": "publishAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "blogPosts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "published", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "publishAt", "order": "DESCENDING" }
       ]

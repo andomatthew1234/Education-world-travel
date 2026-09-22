@@ -54,7 +54,7 @@ This is the proposed dependency-aware ticket breakdown derived from `prd.md`. Re
 
 **Blocked by:** Tasks 2, 4, and 7.
 
-**What it delivers:** Publishing or updating content triggers a Cloudflare rebuild, and administrators have clear documentation for publishing, previewing, scheduling, exporting content/media, recovering a deployment, and managing access.
+**What it delivers:** Firestore changes appear directly on the GitHub Pages blog, scheduled posts are promoted on the first due public visit, and administrators have clear documentation for publishing, previewing, exporting content/media, recovering a deployment, and managing access.
 
 ## 10. Launch-readiness review
 
