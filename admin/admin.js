@@ -36,6 +36,7 @@
       'youtubeButton', 'addAdminButton', 'adminUid', 'adminName', 'adminList', 'toast'
     ].concat(fieldIds).forEach((id) => { elements[id] = document.getElementById(id); });
     elements.featured = document.getElementById('featured');
+    setupEditorSections();
 
     elements.signInButton.addEventListener('click', signInOrOut);
     elements.signOutButton.addEventListener('click', () => auth.signOut());
@@ -230,6 +231,7 @@
     updateSaveState('All changes saved');
     elements.deleteButton.disabled = false;
     renderPostList();
+    activateEditorSection('content');
     if (window.innerWidth < 800) elements.postForm.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -251,6 +253,8 @@
     updateExcerptCount();
     updateCoverPreview();
     setEditorView('write');
+    activateEditorSection('content');
+    updateEditorIndicators();
     dirty = false;
     renderPostList();
   }
@@ -265,6 +269,7 @@
     elements.postIdentity.textContent = `Document: blogPosts/${post.id}`;
     updateExcerptCount();
     updateCoverPreview();
+    updateEditorIndicators();
     if (!elements.markdownPreview.hidden) renderPreview();
   }
 
@@ -274,19 +279,25 @@
     const slug = slugify(elements.slug.value || elements.title.value);
     elements.slug.value = slug;
     elements.status.value = status;
-    if (!elements.title.value.trim() || !slug || !elements.author.value.trim() || !elements.body.value.trim()) {
+    const requiredField = [
+      elements.title, elements.slug, elements.author, elements.body
+    ].find((field) => !field.value.trim());
+    if (requiredField) {
       showToast('Title, slug, author, and article body are required.', true);
+      revealInvalidField(requiredField);
       return;
     }
-    if (!elements.postForm.reportValidity()) return;
+    if (!validatePostForm()) return;
 
     const publishDate = new Date(elements.publishAt.value);
     if (Number.isNaN(publishDate.getTime())) {
       showToast('Choose a valid publication date and time.', true);
+      revealInvalidField(elements.publishAt);
       return;
     }
     if (status === 'scheduled' && publishDate <= new Date()) {
       showToast('A scheduled publication time must be in the future.', true);
+      revealInvalidField(elements.publishAt);
       return;
     }
     if (status === 'published' && statusOverride === 'published') {
@@ -326,6 +337,7 @@
       elements.deleteButton.disabled = false;
       elements.postIdentity.textContent = `Document: blogPosts/${slug}`;
       updateSaveState(status === 'draft' ? 'Draft saved' : status === 'scheduled' ? 'Post scheduled' : 'Post published');
+      updateEditorIndicators();
       showToast(status === 'draft' ? 'Draft saved.' : status === 'scheduled' ? 'Post scheduled.' : 'Post published.');
     } catch (error) {
       updateSaveState('Save failed');
@@ -537,6 +549,117 @@
     renderPostList();
   }
 
+  function setupEditorSections() {
+    const grid = elements.postForm.querySelector('.editor-grid');
+    const main = grid.querySelector('.editor-main');
+    const sidebar = grid.querySelector('.editor-sidebar');
+    const mediaTools = main.querySelector('.media-panel');
+    const publishingCard = elements.status.closest('.settings-card');
+    const organisationCard = elements.categories.closest('.settings-card');
+    const mediaCard = elements.cover.closest('.settings-card');
+    const seoCard = elements.seoTitle.closest('.settings-card');
+    const adminCard = elements.adminUid.closest('.settings-card');
+    const featuredControl = elements.featured.closest('.check-field');
+
+    const tabs = document.createElement('nav');
+    tabs.className = 'editor-section-tabs';
+    tabs.setAttribute('aria-label', 'Post editor sections');
+    const panels = document.createElement('div');
+    panels.className = 'editor-sections';
+    const sections = [
+      ['content', 'Content'],
+      ['media', 'Media'],
+      ['organisation', 'Organisation'],
+      ['publishing', 'Publishing'],
+      ['seo', 'SEO']
+    ];
+    sections.forEach(([id, label], index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.editorSection = id;
+      button.textContent = label;
+      button.className = index === 0 ? 'active' : '';
+      button.setAttribute('aria-selected', String(index === 0));
+      const panel = document.createElement('section');
+      panel.className = 'editor-section';
+      panel.dataset.section = id;
+      panel.hidden = index !== 0;
+      panel.setAttribute('aria-label', label);
+      tabs.appendChild(button);
+      panels.appendChild(panel);
+    });
+
+    const contentPanel = panels.querySelector('[data-section="content"]');
+    [...main.children].filter((node) => node !== mediaTools).forEach((node) => contentPanel.appendChild(node));
+    const mediaPanel = panels.querySelector('[data-section="media"]');
+    mediaPanel.append(mediaCard, mediaTools);
+    const organisationPanel = panels.querySelector('[data-section="organisation"]');
+    organisationCard.prepend(featuredControl);
+    organisationPanel.appendChild(organisationCard);
+    const publishingPanel = panels.querySelector('[data-section="publishing"]');
+    const state = document.createElement('div');
+    state.className = 'publication-state';
+    state.innerHTML = '<span>Current state</span><strong id="publicationState">Draft</strong>';
+    publishingCard.prepend(state);
+    publishingPanel.append(publishingCard, adminCard);
+    const seoPanel = panels.querySelector('[data-section="seo"]');
+    const preview = document.createElement('div');
+    preview.className = 'slug-preview';
+    preview.innerHTML = '<span>Public URL preview</span><strong id="seoUrlPreview"></strong>';
+    seoCard.prepend(preview);
+    seoPanel.appendChild(seoCard);
+
+    grid.replaceChildren(tabs, panels);
+    elements.editorSectionTabs = tabs;
+    elements.publicationState = document.getElementById('publicationState');
+    elements.seoUrlPreview = document.getElementById('seoUrlPreview');
+    tabs.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-editor-section]');
+      if (button) activateEditorSection(button.dataset.editorSection);
+    });
+  }
+
+  function activateEditorSection(sectionId) {
+    if (!elements.editorSectionTabs) return;
+    elements.editorSectionTabs.querySelectorAll('[data-editor-section]').forEach((button) => {
+      const active = button.dataset.editorSection === sectionId;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    elements.postForm.querySelectorAll('.editor-section').forEach((panel) => {
+      panel.hidden = panel.dataset.section !== sectionId;
+    });
+  }
+
+  function revealInvalidField(field) {
+    const panel = field.closest('.editor-section');
+    if (panel) activateEditorSection(panel.dataset.section);
+    if (field === elements.body) setEditorView('write');
+    const wrapper = field.closest('.field, .check-field') || field;
+    wrapper.classList.add('invalid-field');
+    window.setTimeout(() => wrapper.classList.remove('invalid-field'), 2400);
+    field.focus();
+    field.reportValidity();
+  }
+
+  function validatePostForm() {
+    const invalid = [...elements.postForm.elements].find((field) =>
+      typeof field.checkValidity === 'function' && !field.checkValidity()
+    );
+    if (!invalid) return true;
+    revealInvalidField(invalid);
+    return false;
+  }
+
+  function updateEditorIndicators() {
+    if (!elements.publicationState) return;
+    const status = elements.status.value || 'draft';
+    elements.publicationState.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    elements.publicationState.dataset.status = status;
+    const slug = slugify(elements.slug.value || elements.title.value) || 'your-post-slug';
+    elements.seoUrlPreview.textContent = `educationworldtravel.com/pages/blog-post.html?slug=${slug}`;
+  }
+
   function syncSlugFromTitle() {
     if (!slugWasEdited || !elements.slug.value) elements.slug.value = slugify(elements.title.value);
   }
@@ -561,6 +684,7 @@
   function markDirty() {
     dirty = true;
     updateSaveState('Unsaved changes');
+    updateEditorIndicators();
     if (!elements.markdownPreview.hidden) renderPreview();
   }
 
@@ -570,6 +694,7 @@
 
   function updateSaveState(message) {
     elements.saveState.textContent = message;
+    elements.saveState.classList.toggle('unsaved', message.toLowerCase().includes('unsaved'));
   }
 
   function setButtonsDisabled(disabled) {
