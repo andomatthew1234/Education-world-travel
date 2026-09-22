@@ -30,6 +30,13 @@
       "firestore.indexes.json",
       "storage.rules"
     ],
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/admin",
+        "type": 302
+      }
+    ],
     "headers": [
       {
         "source": "/admin/**",
