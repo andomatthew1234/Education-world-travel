@@ -26,9 +26,10 @@ The initial release will preserve the existing site structure, visual design, an
 
 | Layer | Selected Technology | Responsibility |
 |---|---|---|
-| CMS | Sanity | Content editing, posts, media metadata, authors, categories, tags, drafts, scheduled publishing, and content API |
-| Frontend | Astro | Custom site code, static generation, layouts, SEO pages, performance, and content rendering |
-| Hosting | Cloudflare Pages | Global static hosting, Git-connected deployments, HTTPS, CDN, and automated rebuilds |
+| CMS | Custom Firebase CMS | Secure content editing, posts, metadata, authors, categories, tags, drafts, previews, scheduling, and publishing |
+| Database | Cloud Firestore | Public published content and authenticated editorial data |
+| Frontend | Vanilla HTML/CSS/JavaScript | Existing custom site, Markdown rendering, layouts, and content discovery |
+| Hosting | GitHub Pages + Firebase Hosting | Public website on GitHub Pages; private CMS on Firebase Hosting |
 | Source Control | GitHub | Website code ownership, version history, reviews, and deployment source |
 | Spam Protection | Cloudflare Turnstile, later phase | Contact-form protection |
 | Analytics | Cloudflare Web Analytics, later/core enhancement | Privacy-conscious visitor and referrer analytics |
@@ -36,15 +37,15 @@ The initial release will preserve the existing site structure, visual design, an
 ### Architecture Flow
 
 ```text
-Sanity CMS
+Firebase CMS + Firestore
     |
     | Content API / publish webhook
     v
-Astro website source in GitHub
+Website source in GitHub
     |
     | Build and deploy
     v
-Cloudflare Pages
+GitHub Pages
     |
     v
 Visitors
@@ -78,7 +79,7 @@ The first release must:
 
 - Preserve the existing page structure and navigation as closely as practical.
 - Preserve the existing visual design as closely as practical.
-- Migrate the five current blog posts from the existing Markdown/Firestore/static-media setup into Sanity.
+- Migrate the five current Markdown posts and static media metadata into Firestore.
 - Preserve existing post titles, dates, authors, categories, excerpts, cover images, body content, and associated media where available.
 - Retain existing static pages, including the homepage, About, Store, Downloads, and other current non-blog content.
 - Keep the site usable on mobile phones and tablets.
@@ -173,7 +174,7 @@ The CMS must enable:
 - Media upload and management.
 - Content export.
 
-Sanity is the preferred CMS. Before implementation is finalized, its current free-tier support for the required preview and scheduled-publishing workflow must be verified. If a required feature is unavailable at the acceptable cost, select the lowest-maintenance compatible approach without changing the custom-code frontend architecture.
+The CMS is custom-built on Firebase Authentication, Firestore, Hosting, and (once billing is approved) Cloud Storage. Scheduled visibility is enforced with `publishAt` in both Firestore queries and Security Rules.
 
 ### 5.7 Image Management
 
@@ -266,9 +267,9 @@ When implemented, it must:
 
 ### Phase 1: Platform And Content Migration
 
-- Set up Astro project structure.
+- Retain the existing custom-coded site structure.
 - Recreate existing static pages and navigation.
-- Configure Sanity content models.
+- Configure Firestore content models and Firebase Security Rules.
 - Configure two administrator accounts.
 - Migrate the five existing posts and their media.
 - Build blog listing and article pages.

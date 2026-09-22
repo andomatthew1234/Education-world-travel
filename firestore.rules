@@ -2,9 +2,158 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Assumed model: blogPosts/{slug} contains public article content and
+    // editorial metadata. adminUsers/{uid} contains enabled, displayName,
+    // createdAt, and createdBy only; it intentionally contains no email/PII.
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function uidUnchanged(data) {
+      return data.createdBy == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return request.resource.data.createdBy == resource.data.createdBy;
+    }
+
+    function isBootstrapAdmin() {
+      return isAuthenticated() &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email == 'mumanderson10@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrapAdmin() ||
+        (isAuthenticated() &&
+          exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data.enabled == true);
+    }
+
+    function validString(value, minLength, maxLength) {
+      return value is string && value.size() >= minLength && value.size() <= maxLength;
+    }
+
+    function validOptionalUrl(value) {
+      return validString(value, 0, 2048) &&
+        (value == '' || value.matches('^https://.*') || value.matches('^http://.*'));
+    }
+
+    function validAssetReference(value) {
+      return validString(value, 0, 2048) &&
+        (value == '' || value.matches('^https://.*') ||
+          value.matches('^http://.*') ||
+          value.matches('^[A-Za-z0-9][A-Za-z0-9._/-]*$'));
+    }
+
+    function validStatus(data) {
+      return data.status in ['draft', 'published', 'scheduled'] &&
+        ((data.status == 'draft' && data.published == false) ||
+          (data.status in ['published', 'scheduled'] && data.published == true));
+    }
+
+    function hasValidPostFields(data) {
+      return data.keys().hasAll([
+          'title', 'slug', 'author', 'excerpt', 'body', 'categories', 'tags',
+          'cover', 'coverAlt', 'featured', 'status', 'published', 'publishAt',
+          'seoTitle', 'seoDescription', 'canonicalUrl', 'ogImage', 'assetPath',
+          'legacyUrl', 'readTime', 'date', 'createdAt', 'updatedAt', 'createdBy',
+          'updatedBy'
+        ]) && data.keys().hasOnly([
+          'title', 'slug', 'author', 'excerpt', 'body', 'categories', 'tags',
+          'cover', 'coverAlt', 'featured', 'status', 'published', 'publishAt',
+          'seoTitle', 'seoDescription', 'canonicalUrl', 'ogImage', 'assetPath',
+          'legacyUrl', 'readTime', 'date', 'createdAt', 'updatedAt', 'createdBy',
+          'updatedBy'
+        ]);
+    }
+
+    function isValidPost(data, postId) {
+      return hasValidPostFields(data) &&
+        validString(data.title, 1, 160) &&
+        validString(data.slug, 1, 120) &&
+        data.slug.matches('^[a-z0-9]+(?:-[a-z0-9]+)*$') &&
+        postId == data.slug &&
+        validString(data.author, 1, 100) &&
+        validString(data.excerpt, 0, 1000) &&
+        validString(data.body, 1, 900000) &&
+        validString(data.categories, 0, 500) &&
+        validString(data.tags, 0, 1000) &&
+        validAssetReference(data.cover) &&
+        validString(data.coverAlt, 0, 300) &&
+        data.featured is bool &&
+        data.published is bool &&
+        validStatus(data) &&
+        data.publishAt is timestamp &&
+        validString(data.seoTitle, 0, 160) &&
+        validString(data.seoDescription, 0, 320) &&
+        validOptionalUrl(data.canonicalUrl) &&
+        validAssetReference(data.ogImage) &&
+        validString(data.assetPath, 0, 500) &&
+        validOptionalUrl(data.legacyUrl) &&
+        validString(data.readTime, 0, 40) &&
+        validString(data.date, 1, 100) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        validString(data.createdBy, 1, 128) &&
+        validString(data.updatedBy, 1, 128);
+    }
+
+    function isPublicPost(data) {
+      return data.published == true &&
+        data.status in ['published', 'scheduled'] &&
+        data.publishAt <= request.time;
+    }
+
+    function isValidAdmin(data) {
+      return data.keys().hasAll(['enabled', 'displayName', 'createdAt', 'createdBy']) &&
+        data.keys().hasOnly(['enabled', 'displayName', 'createdAt', 'createdBy']) &&
+        data.enabled is bool &&
+        validString(data.displayName, 1, 100) &&
+        data.createdAt is timestamp &&
+        validString(data.createdBy, 1, 128);
+    }
+
     match /blogPosts/{postId} {
-      allow get, list: if resource.data.published == true;
-      allow create, update, delete: if false;
+      allow read: if isAdmin() || isPublicPost(resource.data);
+
+      allow create: if isAdmin() &&
+        isValidPost(request.resource.data, postId) &&
+        uidUnchanged(request.resource.data) &&
+        request.resource.data.updatedBy == request.auth.uid &&
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin() &&
+        isValidPost(request.resource.data, postId) &&
+        uidNotModified() &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.updatedBy == request.auth.uid &&
+        request.resource.data.updatedAt == request.time;
+
+      allow delete: if isAdmin();
+    }
+
+    match /adminUsers/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+
+      allow create: if isAdmin() &&
+        isValidAdmin(request.resource.data) &&
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.createdBy == request.auth.uid;
+
+      allow update: if isAdmin() &&
+        isValidAdmin(request.resource.data) &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.createdBy == resource.data.createdBy;
+
+      allow delete: if isBootstrapAdmin();
     }
 
     match /{document=**} {

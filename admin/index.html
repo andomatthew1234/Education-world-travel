@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Blog CMS — Education World Travel</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Text:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="auth-shell" id="authShell">
+      <section class="login-card">
+        <img src="../assets/images/favicon.png" alt="Education World Travel" />
+        <p class="eyebrow">Private editorial workspace</p>
+        <h1>Blog CMS</h1>
+        <p>Create, preview, schedule, and publish stories without editing the website code.</p>
+        <button class="button button-primary" id="signInButton" type="button">Sign in with Google</button>
+        <p class="auth-message" id="authMessage" role="status"></p>
+      </section>
+    </div>
+
+    <div class="cms" id="cms" hidden>
+      <header class="cms-header">
+        <a class="cms-brand" href="../index.html">
+          <img src="../assets/images/favicon.png" alt="" />
+          <span>Education World Travel</span>
+        </a>
+        <div class="header-actions">
+          <span id="signedInAs"></span>
+          <a class="button button-quiet" href="../pages/blog.html" target="_blank" rel="noopener">View blog</a>
+          <button class="button button-quiet" id="exportButton" type="button">Export content</button>
+          <button class="button button-quiet" id="signOutButton" type="button">Sign out</button>
+        </div>
+      </header>
+
+      <main class="cms-layout">
+        <aside class="post-library">
+          <div class="library-heading">
+            <div>
+              <p class="eyebrow">Content</p>
+              <h1>Posts</h1>
+            </div>
+            <button class="icon-button" id="newPostButton" type="button" aria-label="Create a new post">+</button>
+          </div>
+          <label class="search-field">
+            <span class="sr-only">Search posts</span>
+            <input id="postSearch" type="search" placeholder="Search posts…" />
+          </label>
+          <div class="status-tabs" id="statusTabs" aria-label="Filter posts">
+            <button class="active" type="button" data-status="all">All</button>
+            <button type="button" data-status="draft">Drafts</button>
+            <button type="button" data-status="scheduled">Scheduled</button>
+            <button type="button" data-status="published">Published</button>
+          </div>
+          <div class="post-list" id="postList" aria-live="polite"></div>
+        </aside>
+
+        <section class="editor-shell">
+          <div class="editor-topbar">
+            <div>
+              <p class="save-state" id="saveState">Create a new post or choose one to edit.</p>
+              <p class="post-identity" id="postIdentity"></p>
+            </div>
+            <div class="editor-actions">
+              <button class="button button-danger" id="deleteButton" type="button" disabled>Delete</button>
+              <button class="button button-secondary" id="saveDraftButton" type="button">Save draft</button>
+              <button class="button button-secondary" id="saveButton" type="button">Save changes</button>
+              <button class="button button-primary" id="publishButton" type="button">Publish now</button>
+            </div>
+          </div>
+
+          <form id="postForm" novalidate>
+            <div class="editor-grid">
+              <section class="editor-main">
+                <label class="field field-title">
+                  <span>Title</span>
+                  <input id="title" name="title" required maxlength="160" placeholder="A memorable story title" />
+                </label>
+
+                <div class="field-row">
+                  <label class="field">
+                    <span>URL slug</span>
+                    <input id="slug" name="slug" required maxlength="120" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="a-memorable-story" />
+                  </label>
+                  <label class="field">
+                    <span>Author</span>
+                    <input id="author" name="author" required maxlength="100" value="Karen Anderson" />
+                  </label>
+                </div>
+
+                <label class="field">
+                  <span>Excerpt <small id="excerptCount">0 / 1,000</small></span>
+                  <textarea id="excerpt" name="excerpt" rows="4" maxlength="1000" placeholder="A short introduction shown on the blog page."></textarea>
+                </label>
+
+                <div class="markdown-heading">
+                  <div>
+                    <span class="field-label">Article body</span>
+                    <small>GitHub-flavoured Markdown</small>
+                  </div>
+                  <div class="view-tabs" role="tablist">
+                    <button class="active" id="writeTab" type="button" role="tab" aria-selected="true">Write</button>
+                    <button id="previewTab" type="button" role="tab" aria-selected="false">Preview</button>
+                  </div>
+                </div>
+                <div class="markdown-toolbar" id="markdownToolbar" aria-label="Markdown formatting">
+                  <button type="button" data-before="**" data-after="**" title="Bold"><strong>B</strong></button>
+                  <button type="button" data-before="*" data-after="*" title="Italic"><em>I</em></button>
+                  <button type="button" data-line="## " title="Heading">H2</button>
+                  <button type="button" data-line="- " title="Bulleted list">• List</button>
+                  <button type="button" data-line="> " title="Blockquote">❝</button>
+                  <button type="button" data-before="[" data-after="](https://)" title="Link">Link</button>
+                  <button type="button" data-before="`" data-after="`" title="Inline code">Code</button>
+                  <button type="button" id="youtubeButton" title="YouTube embed">YouTube</button>
+                </div>
+                <textarea class="markdown-editor" id="body" name="body" required maxlength="900000" spellcheck="true" placeholder="# Start writing…"></textarea>
+                <article class="markdown-preview post-body" id="markdownPreview" hidden></article>
+
+                <section class="media-panel">
+                  <div>
+                    <h2>Media and downloads</h2>
+                    <p>Upload an image or file and insert its Markdown at the cursor.</p>
+                  </div>
+                  <div class="media-actions">
+                    <label class="button button-secondary file-button">
+                      Insert image
+                      <input id="bodyImageUpload" type="file" accept="image/*" />
+                    </label>
+                    <label class="button button-secondary file-button">
+                      Insert download
+                      <input id="downloadUpload" type="file" accept=".pdf,.zip,.docx,.xlsx,.pptx,.txt" />
+                    </label>
+                  </div>
+                  <p class="upload-state" id="uploadState" role="status"></p>
+                </section>
+              </section>
+
+              <aside class="editor-sidebar">
+                <section class="settings-card">
+                  <h2>Publishing</h2>
+                  <label class="field">
+                    <span>Status</span>
+                    <select id="status" name="status">
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="scheduled">Scheduled</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span>Publication date and time</span>
+                    <input id="publishAt" name="publishAt" type="datetime-local" required />
+                  </label>
+                  <label class="check-field">
+                    <input id="featured" name="featured" type="checkbox" />
+                    <span>Feature this post</span>
+                  </label>
+                  <p class="settings-help">Scheduled posts appear automatically when this time arrives.</p>
+                </section>
+
+                <section class="settings-card">
+                  <h2>Organisation</h2>
+                  <label class="field">
+                    <span>Categories</span>
+                    <input id="categories" name="categories" maxlength="500" placeholder="Trips, England" />
+                    <small>Separate with commas.</small>
+                  </label>
+                  <label class="field">
+                    <span>Tags</span>
+                    <input id="tags" name="tags" maxlength="1000" placeholder="London, homeschooling, museums" />
+                    <small>Separate with commas.</small>
+                  </label>
+                  <label class="field">
+                    <span>Reading time</span>
+                    <input id="readTime" name="readTime" maxlength="40" placeholder="5 min read" />
+                  </label>
+                </section>
+
+                <section class="settings-card">
+                  <h2>Cover image</h2>
+                  <div class="cover-preview" id="coverPreview">No cover selected</div>
+                  <label class="field">
+                    <span>Image URL</span>
+                    <input id="cover" name="cover" maxlength="2048" placeholder="https://… or existing filename" />
+                  </label>
+                  <label class="field">
+                    <span>Alternative text</span>
+                    <input id="coverAlt" name="coverAlt" maxlength="300" placeholder="Describe the image" />
+                  </label>
+                  <label class="button button-secondary file-button full-width">
+                    Upload cover image
+                    <input id="coverUpload" type="file" accept="image/*" />
+                  </label>
+                </section>
+
+                <details class="settings-card" open>
+                  <summary>Search and sharing</summary>
+                  <label class="field">
+                    <span>SEO title</span>
+                    <input id="seoTitle" name="seoTitle" maxlength="160" placeholder="Defaults to the post title" />
+                  </label>
+                  <label class="field">
+                    <span>Meta description</span>
+                    <textarea id="seoDescription" name="seoDescription" rows="3" maxlength="320" placeholder="Defaults to the excerpt"></textarea>
+                  </label>
+                  <label class="field">
+                    <span>Canonical URL</span>
+                    <input id="canonicalUrl" name="canonicalUrl" type="url" maxlength="2048" placeholder="Optional https://…" />
+                  </label>
+                  <label class="field">
+                    <span>Social image</span>
+                    <input id="ogImage" name="ogImage" maxlength="2048" placeholder="Defaults to the cover image" />
+                  </label>
+                </details>
+
+                <details class="settings-card">
+                  <summary>Administrators</summary>
+                  <p class="settings-help">Ask the new editor to sign in once and send you the UID shown on their access screen.</p>
+                  <label class="field">
+                    <span>Firebase user UID</span>
+                    <input id="adminUid" maxlength="128" placeholder="Paste UID" />
+                  </label>
+                  <label class="field">
+                    <span>Display name</span>
+                    <input id="adminName" maxlength="100" placeholder="Editor name" />
+                  </label>
+                  <button class="button button-secondary full-width" id="addAdminButton" type="button">Approve administrator</button>
+                  <div class="admin-list" id="adminList"></div>
+                </details>
+              </aside>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+    <script src="../js/markdown.js?v=2"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

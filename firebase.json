@@ -1,6 +1,18 @@
 {
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Education World Travel",
+        "supportEmail": "mumanderson10@gmail.com"
+      }
+    }
+  },
   "firestore": {
-    "rules": "firestore.rules"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   },
   "hosting": {
     "public": ".",
@@ -10,7 +22,24 @@
       ".git/**",
       ".github/**",
       ".firebase/**",
-      "node_modules/**"
+      "node_modules/**",
+      "scripts/**",
+      "data/**",
+      "**/*.md",
+      "firestore.rules",
+      "firestore.indexes.json",
+      "storage.rules"
+    ],
+    "headers": [
+      {
+        "source": "/admin/**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+          { "key": "Cache-Control", "value": "no-store" }
+        ]
+      }
     ],
     "cleanUrls": false,
     "trailingSlash": false

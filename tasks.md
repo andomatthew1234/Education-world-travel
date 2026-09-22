@@ -2,17 +2,17 @@
 
 This is the proposed dependency-aware ticket breakdown derived from `prd.md`. Review and approve the granularity and blocking edges before publishing separate ticket files.
 
-## 1. Validate Sanity, Cloudflare, and cost assumptions
+## 1. Validate Firebase and cost assumptions
 
 **Blocked by:** None.
 
-**What it delivers:** A confirmed, documented free/low-cost service configuration, including whether Sanity supports the required two-admin workflow, drafts, previews, scheduling, exports, media usage, and publish-triggered deployments within the budget target.
+**What it delivers:** A confirmed Firebase configuration for two administrators, drafts, previews, scheduling, exports, and public Firestore reads. Firebase Storage requires Blaze billing before activation.
 
-## 2. Create the Astro site foundation and deployment pipeline
+## 2. Connect the existing site to Firestore
 
 **Blocked by:** Task 1.
 
-**What it delivers:** The current site runs as an Astro project, deploys securely from GitHub to Cloudflare Pages, and has a repeatable local development, build, preview, and production deployment process.
+**What it delivers:** The existing GitHub Pages site lists and renders published Firestore posts securely.
 
 ## 3. Recreate the shared site shell and static pages
 
@@ -20,29 +20,29 @@ This is the proposed dependency-aware ticket breakdown derived from `prd.md`. Re
 
 **What it delivers:** Visitors can use the existing navigation and access the current non-blog pages in the Astro site, with the existing layout and visual language preserved across desktop, tablet, and mobile.
 
-## 4. Configure the Sanity editorial workspace
+## 4. Configure the Firebase editorial workspace
 
 **Blocked by:** Task 1.
 
-**What it delivers:** Both administrators can sign in to a Sanity Studio and manage authors, categories, tags, posts, cover images, SEO/social fields, YouTube embeds, downloadable files, drafts, previews, scheduling, and publishing.
+**What it delivers:** Approved administrators can sign in to the custom Firebase CMS and manage authors, categories, tags, posts, cover images, SEO/social fields, YouTube embeds, downloadable files, drafts, previews, scheduling, publishing, and exports.
 
 ## 5. Build the CMS-powered article page
 
 **Blocked by:** Tasks 2 and 4.
 
-**What it delivers:** A published Sanity post appears as a fast, responsive, secure, fully rendered article at `/blog/<slug>/`, including its image, author, categories/tags, embedded YouTube content, downloads, and SEO/social metadata.
+**What it delivers:** A published Firestore post appears as a responsive, secure article, including its image, author, categories/tags, embedded YouTube content, downloads, and client-side SEO/social metadata.
 
 ## 6. Build blog discovery and navigation
 
 **Blocked by:** Task 5.
 
-**What it delivers:** Visitors can browse blog posts, filter by category/tag, identify featured posts, view author information, and search content without relying on the old Firestore client-rendered blog.
+**What it delivers:** Visitors can browse Firestore blog posts, filter by category, identify featured posts, view author information, and search content.
 
 ## 7. Migrate and verify existing content
 
 **Blocked by:** Tasks 4, 5, and 6.
 
-**What it delivers:** The five current posts and their media are imported into Sanity, render correctly in the new site, retain their key metadata, and are available through the new blog listing and search experience.
+**What it delivers:** The five current posts and their media metadata are imported into Firestore, render correctly, retain their metadata, and are available through the blog listing and search experience.
 
 ## 8. Complete SEO, sharing, and legacy URLs
 

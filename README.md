@@ -71,7 +71,55 @@ coverAlt: 'Cotswolds village street'
 ![Arlington Row cottages](village-street.jpg)
 ```
 
-Run `python scripts/optimize-blog-posts.py` after adding or changing post metadata so `data/blog-list.json` is refreshed for the blog listing page.
+The Markdown files are now the migration/archive source. Live content is stored in the `blogPosts` collection in Firestore and managed through the custom CMS.
+
+## Firebase CMS
+
+The private editorial workspace is deployed at:
+
+```text
+https://educationworldtravel-bbf1e.web.app/admin/
+```
+
+It supports:
+
+- Google sign-in and approved administrator accounts
+- drafts, immediate publishing, and scheduled publishing
+- full GitHub-flavoured Markdown with a sanitised live preview
+- cover images, article images, file downloads, and YouTube embeds
+- categories, tags, featured posts, author and reading-time fields
+- SEO titles/descriptions, canonical URLs, and social images
+- content search, mobile editing, and JSON content export
+
+The bootstrap administrator is the verified Firebase account configured in `firestore.rules`. Additional administrators sign in once, copy the UID shown on the access screen, and are approved from the Administrators panel in the CMS.
+
+Scheduled posts use `publishAt` plus Firestore Security Rules. They become publicly readable automatically when their scheduled time arrives, without a paid scheduler or server process.
+
+### Media setup
+
+Cloud Storage for Firebase now requires the Blaze billing plan for new projects. The CMS upload controls and secure `storage.rules` are implemented, but the project owner must activate Storage and link billing before uploads can be deployed. Existing repository images and external HTTPS image URLs continue to work without Storage.
+
+### Migration and deployment
+
+Re-import the five archived posts with the full CMS metadata schema:
+
+```text
+node scripts/migrate-blog-posts.mjs
+```
+
+Deploy authentication, Firestore, and the Firebase-hosted CMS:
+
+```text
+npx firebase-tools deploy --only auth,firestore,hosting
+```
+
+After Storage has been activated, deploy its rules with:
+
+```text
+npx firebase-tools deploy --only storage
+```
+
+The public GitHub Pages site reads only published, non-future posts directly from Firestore. Firebase write credentials are never present in public JavaScript.
 
 ## Project status
 The rebuild is actively being built. Current progress includes:
@@ -83,8 +131,8 @@ The rebuild is actively being built. Current progress includes:
 - Store/Downloads placeholders in place
 
 What we're planning to add soon:
-- Better blog posts with images
-- Improvements on CMS (blog post management), SEO (Google/Bing search result engines), and Responsive Design (making the website look and scale great on smaller devices)
+- Static article generation for stronger search-engine and social-card crawling
+- Activate Firebase Storage after billing approval
 - Easy bug-reporting page 
 - improved images
 - dark theme option

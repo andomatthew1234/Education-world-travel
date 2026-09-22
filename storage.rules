@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null &&
+        ((request.auth.token.email_verified == true &&
+          request.auth.token.email == 'mumanderson10@gmail.com') ||
+          (firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid)) &&
+            firestore.get(/databases/(default)/documents/adminUsers/$(request.auth.uid)).data.enabled == true));
+    }
+
+    match /cms/images/{fileName} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.resource.size < 15 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/.*');
+      allow delete: if isAdmin();
+    }
+
+    match /cms/downloads/{fileName} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.resource.size < 25 * 1024 * 1024 &&
+        request.resource.contentType.matches('(application/pdf|application/zip|application/vnd.openxmlformats-officedocument.*|text/plain)');
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
