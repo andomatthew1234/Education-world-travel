@@ -86,6 +86,7 @@ It supports:
 - Google sign-in and approved administrator accounts
 - drafts, immediate publishing, and scheduled publishing
 - full GitHub-flavoured Markdown with a sanitised live preview
+- local Word `.docx` import with conversion to editable Markdown
 - cover images, article images, file downloads, and YouTube embeds
 - categories, tags, featured posts, author and reading-time fields
 - SEO titles/descriptions, canonical URLs, and social images

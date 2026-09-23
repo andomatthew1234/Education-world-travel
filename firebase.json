@@ -23,6 +23,7 @@
       ".github/**",
       ".firebase/**",
       "node_modules/**",
+      ".tmp*/**",
       "scripts/**",
       "data/**",
       "**/*.md",

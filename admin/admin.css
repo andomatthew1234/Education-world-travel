@@ -132,6 +132,12 @@ textarea { resize: vertical; }
 .youtube-embed { position: relative; aspect-ratio: 16/9; margin: 24px 0; overflow: hidden; border-radius: 14px; background: #000; }
 .youtube-embed iframe { width: 100%; height: 100%; border: 0; }
 
+.docx-import { margin: 4px 0 26px; padding: 18px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px 20px; border: 1px dashed #aeb8c8; border-radius: 14px; background: #fafcff; }
+.docx-import h2 { margin: 0 0 5px; font-size: 1rem; }
+.docx-import p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.docx-import .upload-state { grid-column: 1 / -1; }
+.docx-import.is-working { opacity: .72; pointer-events: none; }
+
 .media-panel { padding: 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; border: 1px dashed #aeb8c8; border-radius: 16px; background: #fafcff; }
 .media-panel h2 { margin: 0 0 4px; font-size: 1rem; }
 .media-panel p { margin: 0; color: var(--muted); font-size: .78rem; }
@@ -165,6 +171,7 @@ textarea { resize: vertical; }
   .editor-sections { padding: 14px; }
   .editor-section[data-section="content"] { padding: 20px; }
   .editor-section > .settings-card, .media-panel { padding: 20px; }
+  .docx-import { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; gap: 0; }
   .markdown-editor, .markdown-preview { min-height: 480px; }
   .login-card { padding: 34px 24px; }

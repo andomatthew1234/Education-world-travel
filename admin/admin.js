@@ -33,7 +33,7 @@
       'postIdentity', 'deleteButton', 'saveDraftButton', 'saveButton', 'publishButton',
       'writeTab', 'previewTab', 'markdownToolbar', 'markdownPreview', 'excerptCount',
       'coverPreview', 'coverUpload', 'bodyImageUpload', 'downloadUpload', 'uploadState',
-      'youtubeButton', 'addAdminButton', 'adminUid', 'adminName', 'adminList', 'toast'
+      'youtubeButton', 'docxUpload', 'docxImportState', 'addAdminButton', 'adminUid', 'adminName', 'adminList', 'toast'
     ].concat(fieldIds).forEach((id) => { elements[id] = document.getElementById(id); });
     elements.featured = document.getElementById('featured');
     setupEditorSections();
@@ -55,6 +55,7 @@
     elements.coverUpload.addEventListener('change', () => uploadFile(elements.coverUpload, 'images', 'cover'));
     elements.bodyImageUpload.addEventListener('change', () => uploadFile(elements.bodyImageUpload, 'images', 'body-image'));
     elements.downloadUpload.addEventListener('change', () => uploadFile(elements.downloadUpload, 'downloads', 'download'));
+    elements.docxUpload.addEventListener('change', importDocx);
     elements.addAdminButton.addEventListener('click', addAdmin);
     elements.title.addEventListener('input', syncSlugFromTitle);
     elements.slug.addEventListener('input', () => { slugWasEdited = true; elements.slug.value = slugify(elements.slug.value); });
@@ -547,6 +548,92 @@
     activeStatus = button.dataset.status;
     elements.statusTabs.querySelectorAll('button').forEach((item) => item.classList.toggle('active', item === button));
     renderPostList();
+  }
+
+  async function importDocx() {
+    const file = elements.docxUpload.files?.[0];
+    if (!file) return;
+    const importPanel = elements.docxUpload.closest('.docx-import');
+    try {
+      if (!file.name.toLowerCase().endsWith('.docx')) throw new Error('Choose a Microsoft Word .docx file.');
+      if (file.size > 25000000) throw new Error('This Word document is larger than 25 MB. Compress its images, then try again.');
+      if (!window.mammoth || !window.TurndownService) throw new Error('The Word conversion tools did not load. Refresh and try again.');
+      if (elements.body.value.trim() && !window.confirm('Replace the current article body with the imported Word document?')) return;
+
+      importPanel.classList.add('is-working');
+      elements.docxImportState.textContent = `Converting ${file.name}…`;
+      const result = await window.mammoth.convertToHtml(
+        { arrayBuffer: await file.arrayBuffer() },
+        {
+          includeDefaultStyleMap: true,
+          styleMap: [
+            "p[style-name='Title'] => h1:fresh",
+            "p[style-name='Subtitle'] => p.docx-subtitle:fresh",
+            "p[style-name='Quote'] => blockquote:fresh",
+            "p[style-name='Intense Quote'] => blockquote:fresh",
+            "u => u"
+          ],
+          convertImage: window.mammoth.images.dataUri
+        }
+      );
+
+      const parsed = new DOMParser().parseFromString(result.value, 'text/html');
+      const firstHeading = parsed.body.querySelector(':scope > h1:first-child');
+      if (!elements.title.value.trim() && firstHeading?.textContent.trim()) {
+        elements.title.value = firstHeading.textContent.trim().slice(0, 160);
+        firstHeading.remove();
+        syncSlugFromTitle();
+      }
+
+      const turndown = new window.TurndownService({
+        headingStyle: 'atx',
+        bulletListMarker: '-',
+        codeBlockStyle: 'fenced',
+        emDelimiter: '*',
+        strongDelimiter: '**'
+      });
+      if (window.turndownPluginGfm?.gfm) turndown.use(window.turndownPluginGfm.gfm);
+      turndown.addRule('wordTables', {
+        filter: 'table',
+        replacement: (_, table) => {
+          const rows = [...table.rows].map((row) =>
+            [...row.cells].map((cell) => cell.textContent.trim().replace(/\|/g, '\\|').replace(/\s+/g, ' '))
+          );
+          if (!rows.length) return '';
+          const width = Math.max(...rows.map((row) => row.length));
+          rows.forEach((row) => { while (row.length < width) row.push(''); });
+          const line = (row) => `| ${row.join(' | ')} |`;
+          return `\n\n${line(rows[0])}\n${line(Array(width).fill('---'))}\n${rows.slice(1).map(line).join('\n')}\n\n`;
+        }
+      });
+      turndown.addRule('underline', {
+        filter: ['u'],
+        replacement: (content) => `<u>${content}</u>`
+      });
+      const markdown = turndown.turndown(parsed.body.innerHTML).trim();
+      if (!markdown) throw new Error('No readable article content was found in that Word document.');
+      if (markdown.length > 880000) {
+        throw new Error('This document is too large to store as one post. Reduce or compress its embedded images, then try again.');
+      }
+
+      elements.body.value = markdown;
+      if (!elements.excerpt.value.trim()) elements.excerpt.value = plainTextExcerpt(markdown);
+      updateExcerptCount();
+      setEditorView('write');
+      markDirty();
+      const warningCount = result.messages?.length || 0;
+      elements.docxImportState.textContent = warningCount
+        ? `Imported ${file.name} with ${warningCount} conversion note${warningCount === 1 ? '' : 's'}. Review the preview before publishing.`
+        : `Imported ${file.name}. Review the preview before publishing.`;
+      showToast('Word document converted to Markdown.');
+      elements.body.focus();
+    } catch (error) {
+      elements.docxImportState.textContent = '';
+      showToast(error.message || 'The Word document could not be imported.', true);
+    } finally {
+      importPanel.classList.remove('is-working');
+      elements.docxUpload.value = '';
+    }
   }
 
   function setupEditorSections() {

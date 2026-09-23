@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Text:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/admin/admin.css?v=4" />
+    <link rel="stylesheet" href="/admin/admin.css?v=5" />
   </head>
   <body>
     <div class="auth-shell" id="authShell">
@@ -96,6 +96,18 @@
                   <span>Excerpt <small id="excerptCount">0 / 1,000</small></span>
                   <textarea id="excerpt" name="excerpt" rows="4" maxlength="1000" placeholder="A short introduction shown on the blog page."></textarea>
                 </label>
+
+                <section class="docx-import">
+                  <div>
+                    <h2>Import from Word</h2>
+                    <p>Convert a .docx file into editable Markdown, including headings, lists, links, tables, emphasis, and embedded images.</p>
+                  </div>
+                  <label class="button button-secondary file-button">
+                    Upload .docx
+                    <input id="docxUpload" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                  </label>
+                  <p class="upload-state" id="docxImportState" role="status"></p>
+                </section>
 
                 <div class="markdown-heading">
                   <div>
@@ -246,7 +258,10 @@
     <script src="/js/firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/turndown@7.2.0/dist/turndown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js"></script>
     <script src="/js/markdown.js?v=2"></script>
-    <script src="/admin/admin.js?v=4"></script>
+    <script src="/admin/admin.js?v=5"></script>
   </body>
 </html>
